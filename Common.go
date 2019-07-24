@@ -18,7 +18,7 @@ import (
 const (
 	sqlGetMdAccount = "" +
 		"select accname " +
-		"from zlaccount83 " +
+		"from zlaccount%s " +
 		"where accisdeleted = 0 " +
 		"	and acctype = 1"
 )
@@ -129,8 +129,8 @@ func GetSocketMsg(address string, port int, msg string) (string, error) {
 }
 
 //获取账套列表
-func GetAccountList(dbConfig *goToolMSSql2000.MSSqlConfig) ([]string, error) {
-	rows, err := goToolMSSqlHelper.GetRowsBySQL2000(dbConfig, sqlGetMdAccount)
+func GetAccountList(dbConfig *goToolMSSql2000.MSSqlConfig, accType string) ([]string, error) {
+	rows, err := goToolMSSqlHelper.GetRowsBySQL2000(dbConfig, fmt.Sprintf(sqlGetMdAccount, accType))
 	if err != nil {
 		return nil, err
 	}
