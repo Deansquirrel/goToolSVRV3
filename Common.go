@@ -21,6 +21,12 @@ const (
 		"from zlaccount%s " +
 		"where accisdeleted = 0 " +
 		"	and acctype = 1"
+	sqlGetZlCompany = "" +
+		"SELECT [coid],[coab],[cocode],[couserab],[cousercode]," +
+		"	[cofunc] " +
+		"FROM [zlcompany]"
+	sqlGetXtSelfVer = "" +
+		"SELECT [svname],[svver],[svdate] FROM [xtselfver]"
 )
 
 //获取master库连接信息
@@ -152,4 +158,44 @@ func GetAccountList(dbConfig *goToolMSSql2000.MSSqlConfig, accType string) ([]st
 		return nil, errors.New(errMsg)
 	}
 	return result, nil
+}
+
+//coid、coab、cocode、couserab、cousercode、cofunc、svname、svver、svdate
+func GetZlCompany(dbConfig *goToolMSSql2000.MSSqlConfig) (
+	coId int, coAb string, coCode string, coUserAb string, coUserCode string, coFunc int,
+	err error) {
+	rows, err := goToolMSSqlHelper.GetRowsBySQL2000(dbConfig, sqlGetZlCompany)
+	if err != nil {
+		return
+	}
+	for rows.Next() {
+		err = rows.Scan(&coId, &coAb, &coCode, &coUserAb, &coUserCode, &coFunc)
+		if err != nil {
+			return
+		}
+	}
+	if rows.Err() != nil {
+		err = rows.Err()
+		return
+	}
+	return
+}
+
+//svname,svver,svdate
+func GetXtSelfVer(dbConfig *goToolMSSql2000.MSSqlConfig) (svName string, svVer string, svDate time.Time, err error) {
+	rows, err := goToolMSSqlHelper.GetRowsBySQL2000(dbConfig, sqlGetXtSelfVer)
+	if err != nil {
+		return
+	}
+	for rows.Next() {
+		err = rows.Scan(&svName, &svVer, &svDate)
+		if err != nil {
+			return
+		}
+	}
+	if rows.Err() != nil {
+		err = rows.Err()
+		return
+	}
+	return
 }
