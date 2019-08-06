@@ -168,6 +168,9 @@ func GetZlCompany(dbConfig *goToolMSSql2000.MSSqlConfig) (
 	if err != nil {
 		return
 	}
+	defer func() {
+		_ = rows.Close()
+	}()
 	for rows.Next() {
 		err = rows.Scan(&coId, &coAb, &coCode, &coUserAb, &coUserCode, &coFunc)
 		if err != nil {
@@ -187,6 +190,9 @@ func GetXtSelfVer(dbConfig *goToolMSSql2000.MSSqlConfig) (svName string, svVer s
 	if err != nil {
 		return
 	}
+	defer func() {
+		_ = rows.Close()
+	}()
 	for rows.Next() {
 		err = rows.Scan(&svName, &svVer, &svDate)
 		if err != nil {
